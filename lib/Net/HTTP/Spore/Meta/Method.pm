@@ -118,6 +118,8 @@ sub wrap {
 
         my $method = $self->meta->find_spore_method_by_name( $args{name} );
 
+        my $sporex = delete $method_args{'sporex'};
+
         my $payload =
           ( defined $method_args{spore_payload} )
           ? delete $method_args{spore_payload}
@@ -174,6 +176,10 @@ sub wrap {
             'spore.url_scheme'     => $base_url->scheme,
             'spore.formats'         => $formats,
         };
+
+        foreach my $ext (keys %$sporex) {
+            $env->{$ext} = $sporex->{$ext};
+        }
 
         my $response = $self->http_request($env);
         my $code = $response->status;
